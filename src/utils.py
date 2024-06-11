@@ -41,3 +41,8 @@ def get_attention(q, k, v, mask=None):
     values = values.reshape(values.shape[0], values.shape[2], values.shape[1] * values.shape[-1])
     return values
     
+def get_mean_std(x, dims, eps):
+    mean = x.mean(dim=dims, keepdim=True)
+    variance = ((x - mean)**2).mean(dim=dims, keepdim=True)
+    std = (variance+eps).sqrt()
+    return mean, std
