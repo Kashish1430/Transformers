@@ -24,7 +24,3 @@ if __name__  == '__main__':
     ffn = FeedForwardNN(512,  4*512)
     output = ffn(inputs)
     print(output.shape)
-    
-
-        
-        
