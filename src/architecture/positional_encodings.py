@@ -13,10 +13,6 @@ class PositionalEncodings(nn.Module):
         flattened = get_position_encodings(self.SEQ_LENGTH, denominator)
         return flattened
         
-        
-        
-        
-
 if __name__ == '__main__':
     BATCH = 32
     SEQ_LENGTH = 100

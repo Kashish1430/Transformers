@@ -22,12 +22,12 @@ class MultiHeadAttention(nn.Module):
         attention = get_attention(q, k, v)
         attention = self.linear_layer(attention)
         print(attention.shape)
-        
+        return attention
 
 if __name__ == '__main__':
     BATCH = 32
     SEQ_LENGTH = 100
-    INPUT_DIM = 1024
+    INPUT_DIM = 512
     REP = 512 # D_MODEL
     TOTAL_HEADS = 8
     DIMS_PER_HEAD = REP // TOTAL_HEADS
