@@ -20,6 +20,19 @@ def create_temp_input(BATCH, SEQ_LENGTH, INPUT_DIM):
     temp_input = torch.randn((BATCH, SEQ_LENGTH, INPUT_DIM)) #(32, 100, 1024)
     return temp_input
 
+def get_kv(temp_input, input_dim, REP, total_heads, dims_per_head):
+    kv_layer = torch.nn.Linear(input_dim, 2 * REP)
+    kv = kv_layer(temp_input)
+    kv = kv.reshape(temp_input.shape[0], total_heads, temp_input.shape[1], dims_per_head * 2)
+    k, v = kv.chunk(2, dim=-1)
+    return k, v
+
+def get_q(temp_input, input_dim, REP, total_heads, dims_per_head):
+    q_layer = torch.nn.Linear(input_dim, REP)
+    q = q_layer(temp_input)
+    q = q.reshape(temp_input.shape[0], total_heads, temp_input.shape[1], dims_per_head )
+    return q
+    
 def get_qkv(temp_input, input_dim, REP, total_heads, dim_per_head): 
     qkv_linear_layer = torch.nn.Linear(input_dim, 3 * REP) #(1024, 1536)
     qkv = qkv_linear_layer(temp_input) # (32, 100, 1536)
@@ -28,8 +41,12 @@ def get_qkv(temp_input, input_dim, REP, total_heads, dim_per_head):
     return q, k, v
 
 def get_mask(scaled):
-    mask = torch.full(scaled.shape, float('-inf'))
-    mask = torch.triv(mask, diagonal=1)
+    if torch.is_tensor(scaled):
+        shape = [scaled.shape[0], scaled.shape[0]]
+    else:
+        shape = [scaled[0], scaled[0]]
+    mask = torch.full(shape, float('-inf'))
+    mask = torch.triu(mask, diagonal=1)
     return mask
     
 def get_attention(q, k, v, mask=None):

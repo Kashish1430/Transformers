@@ -14,12 +14,12 @@ class MultiHeadAttention(nn.Module):
         self.DIMS_PER_HEAD = DIMS_PER_HEAD
         self.linear_layer = nn.Linear(self.REP, self.REP)
         
-    def forward(self, x):
+    def forward(self, x, mask=None):
         q, k, v = get_qkv(x, self.INPUT_DIM, self.REP, self.TOTAL_HEADS, self.DIMS_PER_HEAD)
         print(q.shape)
         print(k.shape)
         print(v.shape)
-        attention = get_attention(q, k, v)
+        attention = get_attention(q, k, v, mask)
         attention = self.linear_layer(attention)
         print(attention.shape)
         return attention
