@@ -16,7 +16,7 @@ class Sequential(nn.Sequential):
         return y 
 
 class Decoder(nn.Module):
-    def __init__(self, BATCH, SEQ_LENGTH, INPUT_DIM, REP, TOTAL_HEADS, DIMS_PER_HEAD, num_layers=2):
+    def __init__(self, BATCH, SEQ_LENGTH, INPUT_DIM, REP, TOTAL_HEADS, DIMS_PER_HEAD, num_layers=5):
         super().__init__()
         self.decoder_layers = Sequential(*[Decoder_Single_Layer(BATCH, SEQ_LENGTH, INPUT_DIM, REP, TOTAL_HEADS, DIMS_PER_HEAD)
                                            for _ in range(num_layers)])

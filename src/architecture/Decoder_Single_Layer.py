@@ -34,7 +34,7 @@ class Decoder_Single_Layer(nn.Module):
         return attention
     
 if __name__ == '__main__':
-    a= torch.randn((32, 100,512))
+    a = torch.randn((32, 100,512)) # This comes from encoding layer.
     b = torch.randn((32, 100,512))
     decoder_sing = Decoder_Single_Layer(32, 100, 512, 512, 8, 64)
     attention = decoder_sing(a,
