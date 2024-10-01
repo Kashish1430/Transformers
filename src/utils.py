@@ -21,11 +21,11 @@ def create_temp_input(BATCH, SEQ_LENGTH, INPUT_DIM):
     return temp_input
 
 def get_kv(temp_input, input_dim, REP, total_heads, dims_per_head):
-    kv_layer = torch.nn.Linear(input_dim, 2 * REP)
-    kv = kv_layer(temp_input)
-    kv = kv.reshape(temp_input.shape[0], total_heads, temp_input.shape[1], dims_per_head * 2)
+    kv_layer = torch.nn.Linear(input_dim, 2 * REP) #(32, 100, 512) -> (32, 100, 1024) -> 32,76,800
+    kv = kv_layer(temp_input) 
+    kv = kv.reshape(temp_input.shape[0], total_heads, temp_input.shape[1], dims_per_head * 2) #(32, 8, 100, 128) -> 32,76,800
     k, v = kv.chunk(2, dim=-1)
-    return k, v
+    return k, v # (32, 8, 100, 64) each
 
 def get_q(temp_input, input_dim, REP, total_heads, dims_per_head):
     q_layer = torch.nn.Linear(input_dim, REP)

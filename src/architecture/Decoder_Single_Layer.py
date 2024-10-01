@@ -19,18 +19,18 @@ class Decoder_Single_Layer(nn.Module):
         pass
     
     def forward(self, x, y, mask=None):
-        positions = self.positional_encodings()
-        y += positions
-        residuals = y.clone()
-        y = self.multihead_attention(y, mask)
-        y = self.layer_norm(y + residuals)
-        residuals = y.clone()
-        attention =  self.cross_attention(x, y)
-        attention = self.layer_norm(attention + residuals)
-        residuals = attention.clone()
-        attention = self.positionwise_ffn(attention)
-        attention = self.layer_norm(attention + residuals)
-        print(attention.shape)
+        positions = self.positional_encodings() # [(100, 512)]
+        y += positions # (32, 100, 512)
+        residuals = y.clone() # (32, 100, 512)
+        y = self.multihead_attention(y, mask) # (32, 100, 512)
+        y = self.layer_norm(y + residuals) # (32, 100, 512)
+        residuals = y.clone() # (32, 100, 512)
+        attention =  self.cross_attention(x, y) # (32, 100, 512)
+        attention = self.layer_norm(attention + residuals) # (32, 100, 512) with learnable parameters
+        residuals = attention.clone() # (32, 100, 512) 
+        attention = self.positionwise_ffn(attention) # (32, 100, 512) -> (32,100,2048) -> (32, 100, 512)
+        attention = self.layer_norm(attention + residuals) # (32, 100, 512)
+        print(attention.shape) # (32, 100, 512)
         return attention
     
 if __name__ == '__main__':
